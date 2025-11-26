@@ -12,16 +12,16 @@ export default function Navbar() {
       <h1 className="text-2xl font-bold">GadgetShop</h1>
 
       <div className="hidden md:flex items-center gap-6">
-        <a href="/" className="hover:opacity-70">Home</a>
-        <a href="/items" className="hover:opacity-70">Items</a>
-        <a href="/about" className="hover:opacity-70">About</a>
-        <a href="/contact" className="hover:opacity-70">Contact</a>
-        <a 
+        <Link href="/" className="hover:opacity-70">Home</Link>
+        <Link href="/items" className="hover:opacity-70">Items</Link>
+        <Link href="/about" className="hover:opacity-70">About</Link>
+        <Link href="/contact" className="hover:opacity-70">Contact</Link>
+        <Link 
           href="/login" 
           className="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Login
-        </a>
+        </Link>
       </div>
 
       <button 
