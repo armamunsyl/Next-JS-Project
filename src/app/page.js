@@ -11,7 +11,6 @@ export default function Home() {
      <Hero></Hero>
      <Features></Features>
      <PopularItems></PopularItems>
-     <Footer></Footer>
     </div>
   );
 }
