@@ -14,14 +14,11 @@ export const authOptions = {
         const { email, password } = credentials;
 
         await connectDB();
-
-        // find user
         const user = await User.findOne({ email });
         if (!user) {
           throw new Error("Invalid email or password");
         }
 
-        // check password
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
           throw new Error("Invalid email or password");
@@ -47,7 +44,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-// Next.js App Router Format
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

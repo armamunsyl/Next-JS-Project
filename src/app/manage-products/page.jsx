@@ -4,190 +4,115 @@ import { useEffect, useState } from "react";
 
 export default function ManageProducts() {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
-  const [editProduct, setEditProduct] = useState(null);
-  const [editName, setEditName] = useState("");
-  const [editPrice, setEditPrice] = useState("");
-  const [editImage, setEditImage] = useState("");
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
 
-  // -----------------------------
-  // Fetch all products
-  // -----------------------------
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch("/api/products");
-      const data = await res.json();
-      setProducts(data.products || []);
-    } catch (err) {
-      console.log("Fetch error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  async function fetchProducts() {
+    const res = await fetch("/api/products");
+    const data = await res.json();
+    setProducts(data);
+  }
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // -----------------------------
-  // Delete Product
-  // -----------------------------
+  const openEdit = (p) => {
+    setEditingProduct(p);
+    setName(p.name);
+    setPrice(p.price);
+    setImage(p.image);
+    setDescription(p.description || "");
+    setEditOpen(true);
+  };
+
   const handleDelete = async (id) => {
-    const sure = confirm("Are you sure?");
-    if (!sure) return;
+    const res = await fetch(`/api/products/${id}`, { method: "DELETE" });
+    const data = await res.json();
 
-    try {
-      const res = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        await fetchProducts();
-      }
-    } catch (err) {
-      console.log(err);
+    if (data.success) {
+      fetchProducts();
     }
   };
 
-  // -----------------------------
-  // Open Edit Modal
-  // -----------------------------
-  const openEditModal = (product) => {
-    setEditProduct(product);
-    setEditName(product.name);
-    setEditPrice(product.price);
-    setEditImage(product.image);
-  };
-
-  // -----------------------------
-  // Update Product
-  // -----------------------------
   const handleUpdate = async () => {
-    try {
-      const res = await fetch(`/api/products/${editProduct._id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: editName,
-          price: editPrice,
-          image: editImage,
-        }),
-      });
+    if (!editingProduct?._id) return;
 
-      const data = await res.json();
+    const res = await fetch(`/api/products/${editingProduct._id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, price, image, description }),
+    });
 
-      if (data.success) {
-        setEditProduct(null); // Close modal
-        await fetchProducts(); // Refresh table
-      }
-    } catch (err) {
-      console.log("Update error:", err);
+    const data = await res.json();
+    if (data.success) {
+      setEditOpen(false);
+      fetchProducts();
     }
   };
 
-  // -----------------------------
-  // UI Rendering
-  // -----------------------------
   return (
-    <div className="py-10 px-6">
-      <h1 className="text-4xl font-bold text-center mb-10">Manage Products</h1>
+    <div className="p-10">
+      <h1 className="text-3xl font-bold text-center mb-8">Manage Products</h1>
 
-      <div className="bg-white shadow-lg rounded-xl p-6 max-w-5xl mx-auto border">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b">
-              <th className="py-3 text-left">Image</th>
-              <th className="py-3 text-left">Product Name</th>
-              <th className="py-3 text-left">Price</th>
-              <th className="py-3 text-left">Actions</th>
+      <table className="w-full border">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-3">Image</th>
+            <th className="p-3">Product Name</th>
+            <th className="p-3">Price</th>
+            <th className="p-3">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {products.map((p) => (
+            <tr key={p._id} className="border-b">
+              <td className="p-3">
+                <img src={p.image} className="w-16 h-16 rounded" />
+              </td>
+              <td className="p-3">{p.name}</td>
+              <td className="p-3">₹{p.price}</td>
+              <td className="p-3 flex gap-3">
+                <button
+                  onClick={() => openEdit(p)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(p._id)}
+                  className="px-4 py-2 bg-red-600 text-white rounded"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
-          </thead>
+          ))}
+        </tbody>
+      </table>
 
-          <tbody>
-            {products.map((product) => (
-              <tr key={product._id} className="border-b">
-                <td className="py-3">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-14 h-14 object-cover rounded"
-                  />
-                </td>
-
-                <td className="py-3 font-medium">{product.name}</td>
-                <td className="py-3 font-semibold">₹{product.price}</td>
-
-                <td className="py-3 flex gap-3">
-                  <button
-                    onClick={() => openEditModal(product)}
-                    className="bg-blue-600 text-white px-4 py-1 rounded"
-                  >
-                    Edit
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(product._id)}
-                    className="bg-red-600 text-white px-4 py-1 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {products.length === 0 && !loading && (
-          <p className="text-center py-6 text-gray-500">No products found.</p>
-        )}
-      </div>
-
-      {/* -----------------------------------
-          EDIT MODAL
-      ----------------------------------- */}
-      {editProduct && (
+      {editOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-xl w-96">
-            <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+          <div className="bg-white p-6 rounded w-96 space-y-4">
+            <h2 className="text-xl font-semibold">Edit Product</h2>
 
-            <label className="font-semibold">Name</label>
-            <input
-              className="w-full p-2 border rounded mb-3"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-            />
+            <input className="w-full p-2 border" value={name} onChange={(e) => setName(e.target.value)} />
+            <input className="w-full p-2 border" value={price} onChange={(e) => setPrice(e.target.value)} />
+            <input className="w-full p-2 border" value={image} onChange={(e) => setImage(e.target.value)} />
+            <textarea className="w-full p-2 border" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-            <label className="font-semibold">Price</label>
-            <input
-              className="w-full p-2 border rounded mb-3"
-              value={editPrice}
-              onChange={(e) => setEditPrice(e.target.value)}
-            />
-
-            <label className="font-semibold">Image URL</label>
-            <input
-              className="w-full p-2 border rounded mb-4"
-              value={editImage}
-              onChange={(e) => setEditImage(e.target.value)}
-            />
-
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setEditProduct(null)}
-                className="px-4 py-2 bg-gray-400 text-white rounded"
-              >
-                Cancel
-              </button>
-
-              <button
-                onClick={handleUpdate}
-                className="px-4 py-2 bg-green-600 text-white rounded"
-              >
-                Save
-              </button>
-            </div>
+            <button onClick={handleUpdate} className="px-4 py-2 bg-green-600 text-white rounded w-full">
+              Save
+            </button>
+            <button onClick={() => setEditOpen(false)} className="px-4 py-2 bg-gray-600 text-white rounded w-full">
+              Cancel
+            </button>
           </div>
         </div>
       )}
