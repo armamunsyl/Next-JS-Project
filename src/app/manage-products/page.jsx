@@ -1,93 +1,196 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function ManageProducts() {
-  const products = [
-    {
-      id: 1,
-      name: "Noise Cancelling Headphone",
-      price: "₹2500",
-      img: "https://ecom.rangs.com.bd/storage/10981/860X740-01.jpg",
-    },
-    {
-      id: 2,
-      name: "Smart Fitness Band",
-      price: "₹1200",
-      img: "https://cdn.mos.cms.futurecdn.net/v2/t:0,l:437,cw:1125,ch:1125,q:80,w:1125/Pk5ydxYo6ty2Q4SX9vznP6.jpg",
-    },
-    {
-      id: 3,
-      name: "Wireless Earbuds",
-      price: "₹3000",
-      img: "https://www.ultratech.com.bd/image/cache/catalog/PC-Power/pc-power-k98-rgb-gaming-mechanical-keyboard-white-500x500.jpg",
-    },
-    {
-      id: 4,
-      name: "Portable Speaker",
-      price: "₹2000",
-      img: "https://cdn.shopz.com.bd/2024/05/Awei-KA5-20W-Portable-bluetooth-Speaker-1-300x300.jpg",
-    },
-  ];
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  const [editProduct, setEditProduct] = useState(null);
+  const [editName, setEditName] = useState("");
+  const [editPrice, setEditPrice] = useState("");
+  const [editImage, setEditImage] = useState("");
+
+  // -----------------------------
+  // Fetch all products
+  // -----------------------------
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data.products || []);
+    } catch (err) {
+      console.log("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // -----------------------------
+  // Delete Product
+  // -----------------------------
+  const handleDelete = async (id) => {
+    const sure = confirm("Are you sure?");
+    if (!sure) return;
+
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        await fetchProducts();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // -----------------------------
+  // Open Edit Modal
+  // -----------------------------
+  const openEditModal = (product) => {
+    setEditProduct(product);
+    setEditName(product.name);
+    setEditPrice(product.price);
+    setEditImage(product.image);
+  };
+
+  // -----------------------------
+  // Update Product
+  // -----------------------------
+  const handleUpdate = async () => {
+    try {
+      const res = await fetch(`/api/products/${editProduct._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          price: editPrice,
+          image: editImage,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setEditProduct(null); // Close modal
+        await fetchProducts(); // Refresh table
+      }
+    } catch (err) {
+      console.log("Update error:", err);
+    }
+  };
+
+  // -----------------------------
+  // UI Rendering
+  // -----------------------------
   return (
-    <section
-      className="min-h-screen w-full px-4 md:px-12 py-12"
-      style={{
-        background: "linear-gradient(to bottom right, #f7faff, #eef2ff)",
-      }}
-    >
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-10">
-        Manage Products
-      </h1>
+    <div className="py-10 px-6">
+      <h1 className="text-4xl font-bold text-center mb-10">Manage Products</h1>
 
-      <div className="bg-white shadow-xl rounded-xl p-4 md:p-6 overflow-x-auto">
-        <table className="min-w-[700px] w-full text-left">
+      <div className="bg-white shadow-lg rounded-xl p-6 max-w-5xl mx-auto border">
+        <table className="w-full">
           <thead>
-            <tr className="border-b bg-gray-100 text-sm md:text-base">
-              <th className="p-3 font-semibold w-[80px]">Image</th>
-              <th className="p-3 font-semibold">Product Name</th>
-              <th className="p-3 font-semibold">Price</th>
-              <th className="p-3 font-semibold text-center w-[160px]">Actions</th>
+            <tr className="border-b">
+              <th className="py-3 text-left">Image</th>
+              <th className="py-3 text-left">Product Name</th>
+              <th className="py-3 text-left">Price</th>
+              <th className="py-3 text-left">Actions</th>
             </tr>
           </thead>
 
           <tbody>
-            {products.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50 text-sm md:text-base">
-
-                <td className="p-3">
-                  <Image
-                    src={item.img}
-                    width={50}
-                    height={50}
-                    alt={item.name}
-                    className="rounded-md object-cover w-[50px] h-[50px]"
+            {products.map((product) => (
+              <tr key={product._id} className="border-b">
+                <td className="py-3">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-14 h-14 object-cover rounded"
                   />
                 </td>
 
-                <td className="p-3 font-medium">{item.name}</td>
+                <td className="py-3 font-medium">{product.name}</td>
+                <td className="py-3 font-semibold">₹{product.price}</td>
 
-                <td className="p-3">{item.price}</td>
+                <td className="py-3 flex gap-3">
+                  <button
+                    onClick={() => openEditModal(product)}
+                    className="bg-blue-600 text-white px-4 py-1 rounded"
+                  >
+                    Edit
+                  </button>
 
-                <td className="p-3">
-                  <div className="flex flex-col md:flex-row items-center justify-center gap-2">
-
-                    <button className="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs md:text-sm">
-                      Edit
-                    </button>
-
-                    <button className="px-4 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 text-xs md:text-sm">
-                      Delete
-                    </button>
-
-                  </div>
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="bg-red-600 text-white px-4 py-1 rounded"
+                  >
+                    Delete
+                  </button>
                 </td>
-
               </tr>
             ))}
           </tbody>
-
         </table>
+
+        {products.length === 0 && !loading && (
+          <p className="text-center py-6 text-gray-500">No products found.</p>
+        )}
       </div>
-    </section>
+
+      {/* -----------------------------------
+          EDIT MODAL
+      ----------------------------------- */}
+      {editProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-xl w-96">
+            <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+
+            <label className="font-semibold">Name</label>
+            <input
+              className="w-full p-2 border rounded mb-3"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+            />
+
+            <label className="font-semibold">Price</label>
+            <input
+              className="w-full p-2 border rounded mb-3"
+              value={editPrice}
+              onChange={(e) => setEditPrice(e.target.value)}
+            />
+
+            <label className="font-semibold">Image URL</label>
+            <input
+              className="w-full p-2 border rounded mb-4"
+              value={editImage}
+              onChange={(e) => setEditImage(e.target.value)}
+            />
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setEditProduct(null)}
+                className="px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleUpdate}
+                className="px-4 py-2 bg-green-600 text-white rounded"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
