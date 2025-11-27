@@ -12,11 +12,12 @@ export default function ManageProducts() {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
 
-  async function fetchProducts() {
-    const res = await fetch("/api/products");
-    const data = await res.json();
-    setProducts(data);
-  }
+ async function fetchProducts() {
+  const res = await fetch("/api/products", { cache: "no-store" });
+  const data = await res.json();
+  setProducts(data);
+}
+
 
   useEffect(() => {
     fetchProducts();
