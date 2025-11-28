@@ -36,13 +36,7 @@ export default function Login() {
       }}
     >
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
-
-        <h1 className="text-3xl md:text-4xl font-bold text-center">
-          Login
-        </h1>
-        <p className="text-gray-600 text-center mt-2">
-          Sign in to your GadgetShop account
-        </p>
+        <h1 className="text-3xl md:text-4xl font-bold text-center">Login</h1>
 
         {msg && (
           <p className="text-center text-red-600 font-semibold mt-4">{msg}</p>
@@ -73,8 +67,8 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg 
-              font-semibold hover:bg-blue-700 transition"
+            className="w-full py-3 bg-blue-600 text-white rounded-lg 
+              text-lg font-semibold hover:bg-blue-700 transition"
           >
             Login
           </button>
