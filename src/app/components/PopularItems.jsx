@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function PopularItems() {
   const items = [
@@ -32,6 +33,7 @@ export default function PopularItems() {
     <section className="w-full px-6 md:px-12 py-12">
       <h2 className="text-3xl font-bold mb-6">Popular Items</h2>
 
+     <Link href={"/items"}>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {items.map((item) => (
           <div
@@ -50,6 +52,7 @@ export default function PopularItems() {
           </div>
         ))}
       </div>
+     </Link>
     </section>
   );
 }

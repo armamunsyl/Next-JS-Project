@@ -54,13 +54,14 @@ export default function ItemDetails() {
           <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
 
           <p className="text-2xl font-semibold text-gray-800 mb-6">
-            ₹ {product.price}
+            {product.price} BDT
           </p>
 
           <h3 className="text-lg font-semibold mb-2">Description</h3>
           <p className="text-gray-700 leading-relaxed">
             {product.description?.trim()
               ? product.description
+              // console.log(product.description)
               : "No description available for this product."}
           </p>
         </div>

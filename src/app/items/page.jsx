@@ -60,7 +60,7 @@ export default function ItemsPage() {
 
                 <h2 className="font-semibold text-lg mb-1">{p.name}</h2>
 
-                <p className="text-gray-700 font-medium">₹ {p.price}</p>
+                <p className="text-gray-700 font-medium">{p.price} BDT</p>
               </div>
             ))}
           </div>
