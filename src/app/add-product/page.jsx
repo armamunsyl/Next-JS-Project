@@ -7,15 +7,14 @@ import ProductImg from "../../../public/product.png";
 export default function AddProduct() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
-    const [shortDesc, setShortDesc] = useState("");
-    const [fullDesc, setFullDesc] = useState("");
+    const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [msg, setMsg] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!name || !price || !shortDesc || !fullDesc || !image) {
+        if (!name || !price || !description || !image) {
             setMsg("All fields are required!");
             return;
         }
@@ -23,7 +22,7 @@ export default function AddProduct() {
         const res = await fetch("/api/add-product", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, price, shortDesc, fullDesc, image }),
+            body: JSON.stringify({ name, price, description, image }),
         });
 
         const data = await res.json();
@@ -34,11 +33,9 @@ export default function AddProduct() {
         }
 
         setMsg("Product added successfully!");
-
         setName("");
         setPrice("");
-        setShortDesc("");
-        setFullDesc("");
+        setDescription("");
         setImage("");
     };
 
@@ -62,6 +59,7 @@ export default function AddProduct() {
                     )}
 
                     <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+                        
                         <div>
                             <label className="block mb-1 font-semibold">Product Name</label>
                             <input
@@ -69,7 +67,7 @@ export default function AddProduct() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Enter product name"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none focus:border-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-lg"
                             />
                         </div>
 
@@ -80,29 +78,18 @@ export default function AddProduct() {
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
                                 placeholder="Enter price"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none focus:border-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-lg"
                             />
                         </div>
 
                         <div>
-                            <label className="block mb-1 font-semibold">Short Description</label>
-                            <input
-                                type="text"
-                                value={shortDesc}
-                                onChange={(e) => setShortDesc(e.target.value)}
-                                placeholder="Short description"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none focus:border-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block mb-1 font-semibold">Full Description</label>
+                            <label className="block mb-1 font-semibold">Description</label>
                             <textarea
                                 rows="4"
-                                value={fullDesc}
-                                onChange={(e) => setFullDesc(e.target.value)}
-                                placeholder="Write full details..."
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none focus:border-blue-500"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                placeholder="Write product description..."
+                                className="w-full p-3 border border-gray-300 rounded-lg"
                             ></textarea>
                         </div>
 
@@ -113,7 +100,7 @@ export default function AddProduct() {
                                 value={image}
                                 onChange={(e) => setImage(e.target.value)}
                                 placeholder="https://example.com/image.jpg"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none focus:border-blue-500"
+                                className="w-full p-3 border border-gray-300 rounded-lg"
                             />
                         </div>
 

@@ -1,109 +1,70 @@
-import Image from "next/image";
+"use client";
 
-export default async function page({ params }) {
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-  const { id } = await params;
+export default function ItemDetails() {
+  const { id } = useParams();
+  const router = useRouter();
 
-  const items = [
-    {
-      id: "1",
-      name: "Noise Cancelling Headphone",
-      desc: "Premium sound experience.",
-      price: "₹2500",
-      fullDesc:
-        "Experience amazing sound with world-class noise cancellation. Perfect for work, travel, and entertainment.",
-      img: "https://ecom.rangs.com.bd/storage/10981/860X740-01.jpg",
-    },
-    {
-      id: "2",
-      name: "Smart Fitness Band",
-      desc: "Track your daily health.",
-      price: "₹1200",
-      fullDesc:
-        "Monitor your heart rate, sleep cycle, and daily steps with this lightweight fitness band.",
-      img: "https://cdn.mos.cms.futurecdn.net/v2/t:0,l:437,cw:1125,ch:1125,q:80,w:1125/Pk5ydxYo6ty2Q4SX9vznP6.jpg",
-    },
-    {
-      id: "3",
-      name: "Wireless Earbuds",
-      desc: "High quality audio output.",
-      price: "₹3000",
-      fullDesc:
-        "Crystal clear wireless sound with long battery life and fast pairing technology.",
-      img: "https://www.ultratech.com.bd/image/cache/catalog/PC-Power/pc-power-k98-rgb-gaming-mechanical-keyboard-white-500x500.jpg",
-    },
-    {
-      id: "4",
-      name: "Mechanical Keyboard",
-      desc: "Perfect for gaming & typing.",
-      price: "₹3500",
-      fullDesc:
-        "Premium mechanical keyboard with RGB lighting — perfect for gamers and programmers.",
-      img: "https://www.ultratech.com.bd/image/cache/catalog/PC-Power/pc-power-k98-rgb-gaming-mechanical-keyboard-white-500x500.jpg",
-    },
-    {
-      id: "5",
-      name: "Smartwatch",
-      desc: "Track your activity.",
-      price: "₹4500",
-      fullDesc:
-        "Smartwatch with step count, GPS, health tracking and customizable watch faces.",
-      img: "https://images.unsplash.com/photo-1517430816045-df4b7de11d1d",
-    },
-    {
-      id: "6",
-      name: "Portable Speaker",
-      desc: "Loud and clear sound.",
-      price: "₹2000",
-      fullDesc:
-        "Compact portable speaker with deep bass and long battery backup.",
-      img: "https://cdn.shopz.com.bd/2024/05/Awei-KA5-20W-Portable-bluetooth-Speaker-1-300x300.jpg",
-    },
-  ];
+  const [product, setProduct] = useState(null);
 
-  const item = items.find((i) => i.id === id);
+  useEffect(() => {
+    if (id) fetchItem();
+  }, [id]);
 
-  if (!item) {
-    return <h1 className="text-center mt-20 text-2xl">Item Not Found</h1>;
-  }
+  const fetchItem = async () => {
+    try {
+      const res = await fetch(`/api/products/${id}`);
+      const data = await res.json();
+
+      // MAIN FIX 👇
+      setProduct(data.product); 
+    } catch (error) {
+      console.log("Error loading product details:", error);
+    }
+  };
+
+  if (!product)
+    return (
+      <p className="text-center mt-20 text-gray-600 text-lg">
+        Loading product details...
+      </p>
+    );
 
   return (
-    <section className="w-full px-4 md:px-12 py-12">
-
-      <a
-        href="/items"
-        className="inline-block mb-6 px-4 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
+    <div className="max-w-5xl mx-auto px-6 md:px-12 py-14">
+      
+      <button
+        onClick={() => router.back()}
+        className="px-5 py-2 mb-6 rounded-lg bg-gray-200 hover:bg-gray-300 transition"
       >
-        ◀ Back
-      </a>
+        ← Back
+      </button>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+      <div className="bg-white rounded-2xl shadow-xl p-6 md:p-10 flex flex-col md:flex-row gap-10">
+        
+        <img
+          src={product.image || "/placeholder.png"}
+          alt={product.name}
+          className="w-full md:w-1/2 h-72 md:h-96 object-cover rounded-xl shadow-sm"
+        />
 
-        <div className="w-full h-64 md:h-96 overflow-hidden bg-gray-100 rounded-xl">
-          <Image
-            src={item.img}
-            alt={item.name}
-            width={900}
-            height={900}
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <div className="flex-1">
+          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
 
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold">{item.name}</h1>
-
-          <p className="text-gray-700 mt-2 md:text-lg">{item.fullDesc}</p>
-
-          <p className="text-2xl md:text-3xl font-bold text-blue-700 mt-4">
-            {item.price}
+          <p className="text-2xl font-semibold text-gray-800 mb-6">
+            ₹ {product.price}
           </p>
 
-          <button className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Buy Now
-          </button>
+          <h3 className="text-lg font-semibold mb-2">Description</h3>
+          <p className="text-gray-700 leading-relaxed">
+            {product.description?.trim()
+              ? product.description
+              : "No description available for this product."}
+          </p>
         </div>
-
       </div>
-    </section>
+    </div>
   );
 }

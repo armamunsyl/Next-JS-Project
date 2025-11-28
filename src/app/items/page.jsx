@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ItemsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -43,20 +45,22 @@ export default function ItemsPage() {
         {filtered.length === 0 ? (
           <p className="text-gray-500 text-center mt-10">No items found.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {filtered.map((p) => (
               <div
                 key={p._id}
-                className="border rounded-lg p-5 shadow hover:shadow-lg transition"
+                onClick={() => router.push(`/items/${p._id}`)}
+                className="cursor-pointer bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition"
               >
                 <img
-                  src={p.image}
+                  src={p.image || "/placeholder.png"}
                   alt={p.name}
-                  className="w-full h-56 object-cover rounded mb-4"
+                  className="w-full h-48 object-cover rounded-xl mb-4"
                 />
+
                 <h2 className="font-semibold text-lg mb-1">{p.name}</h2>
-                <p className="text-gray-700 mb-2">₹{p.price}</p>
-                <p className="text-sm text-gray-500">{p.description}</p>
+
+                <p className="text-gray-700 font-medium">₹ {p.price}</p>
               </div>
             ))}
           </div>
