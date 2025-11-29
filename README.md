@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 GadgetShop – Modern E-Commerce Web Application  
+**Live Site URL:** https://next-js-project-sigma-gilt.vercel.app/
 
-## Getting Started
+GadgetShop is a modern and user-friendly e-commerce web application where users can browse gadgets, view product details, and explore a smooth shopping UI.  
+Admins can securely manage products with full CRUD functionality.  
+Built with **Next.js 16**, **MongoDB**, **NextAuth**, and **TailwindCSS**, the project focuses on performance, security, and elegant UI design.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🔥 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🔐 User Authentication (NextAuth)
+- Secure Login, Register, and Logout  
+- JWT-based authentication  
+- Fully protected routes using Next.js Proxy (v16 standard)  
+- Auto-redirect for unauthorized users  
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 📦 Product Management (Admin Dashboard)
+- Add new products  
+- Edit product details  
+- Delete products  
+- Real-time UI updates  
+- Supports title, price, image, and description  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🛍️ Product Browsing (Public Users)
+- Responsive product listing  
+- Mobile-optimized grid  
+- Instant search filtering  
+- Detailed product pages  
 
-## Learn More
+### ⚡ Clean & Modern UI
+- TailwindCSS styling  
+- Smooth spacing and layout  
+- Card-based design  
+- Fully mobile responsive  
 
-To learn more about Next.js, take a look at the following resources:
+### 🗄️ Backend & API
+- MongoDB with Mongoose  
+- REST API endpoints  
+- CRUD operations  
+- Dynamic product fetching  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧰 Technologies Used
 
-## Deploy on Vercel
+- Next.js 16 (App Router)  
+- NextAuth (Credentials Provider)  
+- MongoDB & Mongoose  
+- Tailwind CSS  
+- React Hooks  
+- Vercel Deployment  
+- Next.js Proxy (Protected Routes)  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🎯 Project Purpose
+
+This project is created as a complete e-commerce learning system.  
+It demonstrates:
+
+- Authentication flow  
+- Protected route handling  
+- CRUD operations  
+- Server-side API development  
+- Product management  
+- Modern UI/UX practices  
+
+Suitable for educational use and real-world full-stack architecture demonstration.
+
+---
+
+## 👨‍💻 Developer
+
+Developed by **Abdur Rahman Mamun**  
+Frontend Live: https://next-js-project-sigma-gilt.vercel.app/  
+GitHub: https://github.com/armamunsyl  
