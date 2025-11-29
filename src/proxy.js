@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export default function proxy(request) {
-  // NextAuth session cookie check
+ 
   const session =
     request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
@@ -15,7 +15,7 @@ export default function proxy(request) {
 
 export const config = {
   matcher: [
-    "/items/:path*",         // item list + details protected
+    "/items/:path*",        
     "/manage-products/:path*", 
     "/add-product/:path*",
   ],

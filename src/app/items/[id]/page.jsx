@@ -18,7 +18,7 @@ export default function ItemDetails() {
       const res = await fetch(`/api/products/${id}`);
       const data = await res.json();
 
-      // MAIN FIX 👇
+     
       setProduct(data.product); 
     } catch (error) {
       console.log("Error loading product details:", error);
